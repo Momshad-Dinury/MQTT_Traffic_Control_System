@@ -94,7 +94,7 @@ void reconnect() {
     if (client.connect("LC_espClient")) {
       Serial.println("Connected");
       // Once connected, publish an announcement...
-      client.publish("dashboard", "Node Connection Established!");
+      client.publish("dashboard", "Lane Controller Connection Established!");
       // ... and resubscribe
       client.subscribe("lanes");
     } else {

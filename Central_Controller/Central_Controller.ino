@@ -12,6 +12,12 @@ boolean lane_4_flag = true;
 #define lane_3 13
 #define lane_4 15
 
+//LED:
+#define lane_1_LED 0
+#define lane_2_LED 5
+#define lane_3_LED 4
+#define lane_4_LED 1
+
 //WiFi
 const char* ssid = "STELLAR";
 const char* password = "stellarBD";
@@ -36,6 +42,11 @@ void setup() {
   pinMode(lane_2, OUTPUT);
 	pinMode(lane_4, INPUT);
   pinMode(lane_4, OUTPUT);
+
+  pinMode(lane_1_LED, OUTPUT);
+  pinMode(lane_2_LED, OUTPUT);
+  pinMode(lane_3_LED, OUTPUT);
+  pinMode(lane_4_LED, OUTPUT);
 
 	#ifdef DEBUG
 	Serial.println("Pinmode defined");
@@ -77,6 +88,12 @@ void control() {
     lane_2_flag = true;
     lane_3_flag = true;
     lane_4_flag = true;
+
+    digitalWrite(lane_1_LED, HIGH);
+    digitalWrite(lane_2_LED, LOW);
+    digitalWrite(lane_3_LED, LOW);
+    digitalWrite(lane_4_LED, LOW);
+
 	}else if ( digitalRead(lane_2) == HIGH && lane_2_flag == true) {
     client.publish("lanes", "2");
 
@@ -88,6 +105,11 @@ void control() {
     lane_2_flag = false;
     lane_3_flag = true;
     lane_4_flag = true;
+
+    digitalWrite(lane_1_LED, LOW);
+    digitalWrite(lane_2_LED, HIGH);
+    digitalWrite(lane_3_LED, LOW);
+    digitalWrite(lane_4_LED, LOW);
   }else if ( digitalRead(lane_3) == HIGH && lane_3_flag == true) {
     client.publish("lanes", "3");
 
@@ -99,6 +121,12 @@ void control() {
     lane_2_flag = true;
     lane_3_flag = false;
     lane_4_flag = true;
+
+    digitalWrite(lane_1_LED, LOW);
+    digitalWrite(lane_2_LED, LOW);
+    digitalWrite(lane_3_LED, HIGH);
+    digitalWrite(lane_4_LED, LOW);
+
   }else if ( digitalRead(lane_4) == HIGH && lane_4_flag == true) {
     client.publish("lanes", "4");
 
@@ -110,6 +138,12 @@ void control() {
     lane_2_flag = true;
     lane_3_flag = true;
     lane_4_flag = false;
+
+    digitalWrite(lane_1_LED, LOW);
+    digitalWrite(lane_2_LED, LOW);
+    digitalWrite(lane_3_LED, LOW);
+    digitalWrite(lane_4_LED, HIGH);
+
   }
 	
 }
