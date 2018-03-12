@@ -1,15 +1,18 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#define PIN 15
+#define lane_1 15
+#define lane_2 13
+#define lane_3 14
+#define lane_4 3
 
 //Network details:(Editable per Network request)
 const char* ssid = "STELLAR";
 const char* password = "stellarBD";
 const char* mqtt_server = "www.stellarbd.com";
 
-WiFiClient N_espClient;
-PubSubClient client(N_espClient);
+WiFiClient LC_espClient;
+PubSubClient client(LC_espClient);
 long lastMsg = 0;
 char msg[50];
 int value = 0;
@@ -19,7 +22,10 @@ void setup() {
   Serial.begin(115200);
   delay(10);
   Serial.println("Initialized..");
-  pinMode(PIN,OUTPUT);
+  pinMode(lane_1, OUTPUT);
+  pinMode(lane_2, OUTPUT);
+  pinMode(lane_3, OUTPUT);
+  pinMode(lane_4, OUTPUT);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -57,11 +63,27 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println();
 
   if ((char)payload[0] == '1')  {
-    digitalWrite(PIN, HIGH);
-  } else if ((char)payload[0] == '0') {
-    digitalWrite(PIN, LOW);
+    digitalWrite(lane_1, HIGH);
+    digitalWrite(lane_2, LOW);
+    digitalWrite(lane_3, LOW);
+    digitalWrite(lane_4, LOW);
+    
+  } else if ((char)payload[0] == '2') {
+    digitalWrite(lane_1, LOW);
+    digitalWrite(lane_2, HIGH);
+    digitalWrite(lane_3, LOW);
+    digitalWrite(lane_4, LOW);
+  } else if ((char)payload[0] == '3') {
+    digitalWrite(lane_1, LOW);
+    digitalWrite(lane_2, LOW);
+    digitalWrite(lane_3, HIGH);
+    digitalWrite(lane_4, LOW);
+  } else if ((char)payload[0] == '4') {
+    digitalWrite(lane_1, LOW);
+    digitalWrite(lane_2, LOW);
+    digitalWrite(lane_3, LOW);
+    digitalWrite(lane_4, HIGH);
   }
-
 }
 
 void reconnect() {
@@ -69,12 +91,12 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("N_espClient")) {
-      Serial.println("connected");
+    if (client.connect("LC_espClient")) {
+      Serial.println("Connected");
       // Once connected, publish an announcement...
       client.publish("dashboard", "Node Connection Established!");
       // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subscribe("lanes");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());

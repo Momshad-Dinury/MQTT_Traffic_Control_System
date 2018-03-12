@@ -2,12 +2,15 @@
 #include <PubSubClient.h>
 
 //Flags:
-boolean location1flag = true;
-// boolean location2flag = true;
-// boolean location3flag = true;
-// boolean location4flag = true;
+boolean lane_1_flag = true;
+boolean lane_2_flag = true;
+boolean lane_3_flag = true;
+boolean lane_4_flag = true;
 //Pinmap:
-#define location1 14
+#define lane_1 14
+#define lane_2 12
+#define lane_3 13
+#define lane_4 15
 
 //WiFi
 const char* ssid = "STELLAR";
@@ -25,11 +28,14 @@ void setup() {
 	Serial.println("System Initialized");
 	#endif
 	//Pinmode:
-	pinMode(location1, INPUT);
-	pinMode(location1, OUTPUT);
-	// pinMode(location2, INPUT);
-	// pinMode(location3, INPUT);
-	// pinMode(location4, INPUT);
+	pinMode(lane_1, INPUT);
+	pinMode(lane_1, OUTPUT);
+	pinMode(lane_3, INPUT);
+  pinMode(lane_3, OUTPUT);
+	pinMode(lane_2, INPUT);
+  pinMode(lane_2, OUTPUT);
+	pinMode(lane_4, INPUT);
+  pinMode(lane_4, OUTPUT);
 
 	#ifdef DEBUG
 	Serial.println("Pinmode defined");
@@ -60,17 +66,51 @@ void loop() {
 
 void control() {
   
-	if( digitalRead(location1) == HIGH && location1flag == true) {
-		client.publish("inTopic", "1");
+	if( digitalRead(lane_1) == HIGH && lane_1_flag == true) {
+		client.publish("lanes", "1");
 
 		#ifdef DEBUG
-		Serial.println("Publishing to topic, value 1");
+		Serial.println("Publishing to lane topic, value 1");
 		#endif
-		//digitalWrite(location1, LOW);
 
-    	location1flag = false;
-	}
-	//location1flag = true;
+    lane_1_flag = false;
+    lane_2_flag = true;
+    lane_3_flag = true;
+    lane_4_flag = true;
+	}else if ( digitalRead(lane_2) == HIGH && lane_2_flag == true) {
+    client.publish("lanes", "2");
+
+    #ifdef DEBUG
+    Serial.println("Publishing to lane topic, value 2");
+    #endif
+
+    lane_1_flag = true;
+    lane_2_flag = false;
+    lane_3_flag = true;
+    lane_4_flag = true;
+  }else if ( digitalRead(lane_3) == HIGH && lane_3_flag == true) {
+    client.publish("lanes", "3");
+
+    #ifdef DEBUG
+    Serial.println("Publishing to lane topic, value 3");
+    #endif
+
+    lane_1_flag = true;
+    lane_2_flag = true;
+    lane_3_flag = false;
+    lane_4_flag = true;
+  }else if ( digitalRead(lane_4) == HIGH && lane_4_flag == true) {
+    client.publish("lanes", "4");
+
+    #ifdef DEBUG
+    Serial.println("Publishing to lane topic, value 4");
+    #endif
+
+    lane_1_flag = true;
+    lane_2_flag = true;
+    lane_3_flag = true;
+    lane_4_flag = false;
+  }
 	
 }
 
