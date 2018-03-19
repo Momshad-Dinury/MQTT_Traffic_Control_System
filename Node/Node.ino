@@ -18,7 +18,7 @@ char msg[50];
 int value = 0;
 
 void setup() {
-  
+
   Serial.begin(115200);
   delay(10);
   Serial.println("Initialized..");
@@ -67,7 +67,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     digitalWrite(lane_2, LOW);
     digitalWrite(lane_3, LOW);
     digitalWrite(lane_4, LOW);
-    
+
   } else if ((char)payload[0] == '2') {
     digitalWrite(lane_1, LOW);
     digitalWrite(lane_2, HIGH);
@@ -112,5 +112,5 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  client.loop(); 
+  client.loop();
 }
